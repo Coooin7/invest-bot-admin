@@ -8,9 +8,9 @@ export const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
-    const user = useUserStore()
-    if (to.meta.requiresAuth === true && user.UserInfo.token === '' && from.path != '/login') {
-        router.replace('/login')
+    const user = useUserStore();
+    if (to.meta.requiresAuth === true && user.UserInfo.address === '' && from.path != '/home') {
+        router.replace('/home');
         return
     }
     next()

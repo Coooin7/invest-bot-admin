@@ -4,15 +4,17 @@ import { AudioManager } from '@/utils/audio';
 import { onMounted } from 'vue';
 const theme = useThemeStore();
 const slot = defineSlots();
-
-onMounted(()=>{
-    AudioManager.playSound('static/audio/typing.mp3');
+defineProps({
+    padding:String,
+    margin:String,
+})
+onMounted(() => {
+    AudioManager.playSound('/static/audio/typing.mp3');
 })
 </script>
 <template>
-    <article class="p-[2px]"
-        :class="theme.createThemeClassName()">
-        <div class="card-warp">
+    <article :class="theme.createThemeClassName()">
+        <div class="card-warp h-full">
             <div class="card-border-line card-border-line-1"></div>
             <div class="card-border-line card-border-line-2"></div>
             <div class="card-border-line card-border-line-3"></div>
@@ -21,19 +23,23 @@ onMounted(()=>{
             <div class="card-border-point card-border-point-2"></div>
             <div class="card-border-point card-border-point-3"></div>
             <div class="card-border-point card-border-point-4"></div>
-            <div>
-                <template v-if="slot['header']">
-                    <header class="card-header">
-                        <h1 class="text-2xl font-bold">
-                            <slot name="header" />
-                        </h1>
-                    </header>
-                    <div class="card-header-line"></div>
-                </template>
+            <div class="h-full flex flex-col items-center justify-between">
+                <div class="w-full">
+                    <template v-if="slot['header']">
+                        <header class="card-header">
+                            <h1 class="text-2xl font-bold" :style="{padding,margin}">
+                                <slot name="header" />
+                            </h1>
+                        </header>
+                    </template>
 
-                <div class="card-body">
-                    <slot name="body" />
+                    <div class="card-body overflow-x-auto" :class="theme.themeScrollClassName" :style="{padding,margin}">
+                        <slot name="body" />
+                    </div>
                 </div>
+                <footer v-if="slot['footer']">
+                    <slot name="footer" />
+                </footer>
             </div>
         </div>
     </article>
@@ -46,7 +52,7 @@ onMounted(()=>{
     backdrop-filter: blur(4px);
     animation: card 600ms 1;
 
-    --animate-time:3s;
+    --animate-time: 3s;
 }
 
 .card-border-line {
@@ -107,31 +113,33 @@ onMounted(()=>{
     left: -2px;
     top: -2px;
     border-width: 2px 0 0 2px;
+    border-top-left-radius: 0.5rem;
 }
 
 .card-border-point-2 {
     left: -2px;
     bottom: -2px;
     border-width: 0 0 2px 2px;
+    border-bottom-left-radius: 0.5rem;
 }
 
 .card-border-point-3 {
     right: -2px;
     top: -2px;
     border-width: 2px 2px 0 0;
+    border-top-right-radius: 0.5rem;
 }
 
 .card-border-point-4 {
     right: -2px;
     bottom: -2px;
     border-width: 0 2px 2px 0;
+    border-bottom-right-radius: 0.5rem;
 }
 
 .card-header {
-    padding: 1em 0;
     position: relative;
     transition: all 250ms ease-out;
-    overflow: hidden;
 }
 
 .card-header h1 {
@@ -139,7 +147,6 @@ onMounted(()=>{
 }
 
 .card-header-line {
-    top: auto;
     left: 50%;
     width: 100%;
     display: block;
@@ -151,9 +158,7 @@ onMounted(()=>{
 }
 
 .card-body {
-    padding: 20px;
     transition: all 600ms ease-out;
-    overflow: hidden;
 }
 
 /**color0 */
@@ -223,9 +228,10 @@ onMounted(()=>{
     border-color: #b80000;
     box-shadow: 0 0 4px rgba(189, 27, 62, 0.65);
 }
+
 /**color3 */
 .type3 .card-warp {
-    background-color: rgba(27, 116, 189, 0.137);
+    background-color: rgba(6, 28, 49, 0.76);
 }
 
 .type3 .card-header-line {
@@ -233,7 +239,7 @@ onMounted(()=>{
 }
 
 .type3 .card-header h1 {
-    color: #39e0ff;
+    border-bottom: 2px solid var(--color-3, #5B8BAB);
 }
 
 .type3 .card-border-point {
@@ -244,47 +250,57 @@ onMounted(()=>{
     border-color: #0172bd;
     box-shadow: 0 0 4px rgba(27, 130, 189, 0.65);
 }
-@-webkit-keyframes card{
-    0%{
+
+@-webkit-keyframes card {
+    0% {
         transform: scaleY(0);
         opacity: 0;
     }
-    100%{
+
+    100% {
         transform: scaleY(1);
         opacity: 1;
     }
 }
-@-webkit-keyframes card-body-width{
-    0%{
+
+@-webkit-keyframes card-body-width {
+    0% {
         width: 0%;
     }
-    100%{
+
+    100% {
         width: 100%;
     }
 }
-@keyframes card{
-    0%{
+
+@keyframes card {
+    0% {
         transform: scale(0);
         opacity: 0;
     }
-    100%{
+
+    100% {
         transform: scale(1);
         opacity: 1;
     }
 }
-@keyframes card-body-width{
-    0%{
+
+@keyframes card-body-width {
+    0% {
         width: 0%;
     }
-    100%{
+
+    100% {
         width: 100%;
     }
 }
-@keyframes card-body-height{
-    0%{
+
+@keyframes card-body-height {
+    0% {
         height: 0%;
     }
-    100%{
+
+    100% {
         height: 100%;
     }
 }

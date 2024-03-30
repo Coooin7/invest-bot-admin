@@ -1,54 +1,19 @@
-import type { BigNumber } from "@ethersproject/bignumber"
 import { httpClient } from "./http"
 import { object_to_query_string } from "@/utils/common"
 export enum TradeType {
     ALL = '', BUY = 'BUY', SELL = 'SELL', DEPOSIT = 'DEPOSIT', DRAW = 'DRAW'
 }
-interface PortfolioRank {
-    userName: string,
-    amount: BigNumber
-}
-interface PortfolioDetails {
-    userName: string,
-    coinId: string,
-    quantity: BigNumber,
-    costPrice: BigNumber,
-    currentPrice: BigNumber,
-    profit: BigNumber
-}
-interface QueryPage {
-    page: number,
-    size?: number | 20,
-    sort?: string[]
-}
-interface TradeDetails {
-    userName: string,
-    coinId: string,
-    quantity: BigNumber,
-    costPrice: BigNumber,
-    currentPrice: BigNumber,
-    profit: BigNumber
-}
-interface HistoricalDataQueryArg {
-    userName?: string,
-    coinId?: string,
-    tradeType?: TradeType,
-}
-interface PortfolioProfitData {
-    totalCost: BigNumber,
-    totalProfit: BigNumber,
-    profitMargin: string,
-    portfolioDetailsVOList: TradeDetails[]
-}
+
 export interface RoleInfo {
-    id?:string,
+    id?: string,
     createdBy?: string,
     createdTime?: number,
     lastModifiedBy?: string,
     lastModifiedTime?: number,
     prefix: string,
     systemMessage: string,
-    roleType: RoleType
+    roleType: RoleType,
+    desc?: string
 }
 export enum RoleType {
     COIN_ROBOT = 'COIN_ROBOT', FEI_SHU = 'FEI_SHU'
@@ -56,36 +21,35 @@ export enum RoleType {
 export class RobotService {
 
     static portfolioRank() {
-        return httpClient.get<Array<PortfolioRank>>('/cryptoTrades/portfolioRank')
+        return httpClient.get<Array<PortfolioRank>>('/portfolios/rank/')
     }
 
     static portfolioDetails(userName: string) {
-        return httpClient.get<Array<PortfolioDetails>>('/cryptoTrades/portfolioDetails?userName=' + userName)
+        return httpClient.get<Array<PortfolioDetails>>('/cryptoTrades/portfolioDetails/?user_name=' + userName)
     }
 
     static currencyHistoricalData(page: QueryPage, query?: HistoricalDataQueryArg) {
         const arg = Object.assign(page, query);
         const q = object_to_query_string(arg);
-        return httpClient.get<{ content: Array<TradeDetails>, totalPages: 0 }>('/cryptoTrades/search' + q)
+        return httpClient.get<{ content: Array<TradeDetails>, totalPages: 0 }>('/cryptoTrades/search/' + q)
     }
 
     static getTotalAmount(userName: string, coinId: string) {
-        const q = object_to_query_string({ userName, coinId });
-        return httpClient.get<BigNumber>('/cryptoTrades/coin/getTotalAmount' + q)
+        return httpClient.get<AccountInfo>(`/portfolios/${userName}/${coinId}/`)
     }
 
     static portfolioProfit(userName: string) {
-        return httpClient.get<PortfolioProfitData>('/cryptoTrades/cryptoPortfolioProfit?userName=' + userName)
+        return httpClient.get<PortfolioProfitData>('/portfolios/cryptoPortfolioProfit/?user_name=' + userName)
     }
 
     static getRole(prefix: string) {
-        return httpClient.get<RoleInfo>('/roleSettings/byPrefix?prefix=' + prefix)
+        return httpClient.get<RoleInfo>('/roleSettings/prefix/' + prefix+'/')
     }
 
     static getRoles(page: QueryPage, searchText: string) {
         const arg = Object.assign(page, { searchText });
         const q = object_to_query_string(arg);
-        return httpClient.get<{ content: Array<TradeDetails>, totalPages: 0 }>('/roleSettings' + q);
+        return httpClient.get<{ content: Array<TradeDetails>, totalPages: 0 }>('/roleSettings/search/' + q);
     }
 
     static deleteRole(id: string) {
@@ -93,10 +57,22 @@ export class RobotService {
     }
 
     static addRole(info: RoleInfo) {
-        return httpClient.post('/roleSettings', info);
+        return httpClient.post('/roleSettings/', info);
     }
 
     static editRole(info: RoleInfo) {
-        return httpClient.put('/roleSettings/' + info.id, info);
+        return httpClient.put('/roleSettings/' + info.id+'/', info);
+    }
+
+    static cryptoTrades(data: any) {
+        return httpClient.post('/portfolios/deposit/', data);
+    }
+
+    static transaction() {
+        return httpClient.post('/roleSettings/coinRobot/trades/')
+    }
+
+    static coinRobotTrade(prefix: string, prompt: string) {
+        return httpClient.post(`/roleSettings/coinRobot/${prefix}/trade/`, { prompt })
     }
 }

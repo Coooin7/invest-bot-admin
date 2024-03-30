@@ -1,29 +1,45 @@
-import { reactive, computed } from 'vue'
+import { reactive } from 'vue'
 import { defineStore } from 'pinia'
+import { connectWallet, disconnectWallet, ethereum, getAddress } from '@/utils/wallet'
+import { useRoute, useRouter } from "vue-router";
 
+let initConnect = false;
 export const useUserStore = defineStore('user', () => {
+    const address = getAddress();
     const UserInfo = reactive({
-        username: '',
-        token: ''
+        address: address ? address : '',
+        token: '',
     })
-    const login = async () => {
+    const route = useRoute();
+    const router = useRouter();
+    !initConnect && ethereum && ethereum.on('accountsChanged', (accounts: string[]) => {
+        UserInfo.address = getAddress();
+        if (!UserInfo.address && route.path != '/home') {
+            router.replace('/home');
+        }else if(UserInfo.address && route.path == '/home'){
+            router.replace('/');
+        }
+    })
+    initConnect = true;
+    const connect = async () => {
         // ****
-        UserInfo.username = 'test'
-        UserInfo.token = '111111111'
-        //**** */
+        // ****
+        await connectWallet();
+        UserInfo.address = getAddress();
+
     }
-    const logout = async () => {
+    const disconnect = async () => {
         // ****
-        UserInfo.username = ''
-        UserInfo.token = ''
+        disconnectWallet();
+        UserInfo.address = '';
+        router.replace('/home');
         //**** */
     }
     return {
         UserInfo,
-        login,
-        logout,
-        
+        connect,
+        disconnect,
     }
-},{
+}, {
     persist: false,
 })

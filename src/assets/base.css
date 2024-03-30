@@ -128,12 +128,14 @@ body {
   display: block;
   background-color: #5e0202;
   width: var(--theme-scroll-width);
+  height: var(--theme-scroll-width);
 }
 .theme-scroll-2::-webkit-scrollbar-thumb{
   visibility: hidden;
   display: block;
   background-color: #ff0000;
   width: var(--theme-scroll-width);
+  height: var(--theme-scroll-width);
 }
 .theme-scroll-2:hover,.theme-scroll-2:hover::-webkit-scrollbar,.theme-scroll-2:hover::-webkit-scrollbar-thumb{
   visibility: visible;
@@ -147,20 +149,22 @@ body {
 .theme-scroll-3::-webkit-scrollbar{
   visibility: hidden;
   display: block;
-  background-color: #003035;
+  background-color: #3B526D;
   width: var(--theme-scroll-width);
+  height: var(--theme-scroll-width);
 }
 .theme-scroll-3::-webkit-scrollbar-thumb{
   visibility: hidden;
   display: block;
-  background-color: #00e7ff;
+  background-color: #5d85b3;
   width: var(--theme-scroll-width);
+  height: var(--theme-scroll-width);
 }
 .theme-scroll-3:hover,.theme-scroll-3:hover::-webkit-scrollbar,.theme-scroll-3:hover::-webkit-scrollbar-thumb{
   visibility: visible;
   scrollbar-width: thin;
 }
 .theme-scroll-3{
-  scrollbar-color:#00e7ff #003035;
+  scrollbar-color:#5d85b3 #3B526D;
   scrollbar-width: none;
 }

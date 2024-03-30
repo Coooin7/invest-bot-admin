@@ -2,7 +2,7 @@ import { fileURLToPath, URL } from 'node:url'
 
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
-
+process.env.npm_package_version
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
@@ -14,6 +14,6 @@ export default defineConfig({
     }
   },
   server:{
-    host:'192.168.123.241'
+    host:'0.0.0.0',
   }
 })

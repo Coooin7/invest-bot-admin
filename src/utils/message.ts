@@ -8,7 +8,7 @@ type Props = {
 const box = window.document.createElement('div')
 window.document.body.appendChild(box)
 export class MessageBox {
-    static _close_timer:number;
+    static _close_timer:any;
     static show(msg: Props) {
         const t = (msg.duration && msg.duration > 0) ? msg.duration : 1500
         const vNode = h(Message, msg);

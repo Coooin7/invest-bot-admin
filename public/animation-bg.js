@@ -20,7 +20,10 @@ window.onload = function () {
         }
         return false;
     }
-
+    function isFirefox(){
+        const ua = window.navigator.userAgent.toLowerCase();
+        return ua.includes('firefox');
+    }
     class point {
         constructor(x, y) {
             this.x = x || Math.random() * w;
@@ -81,7 +84,7 @@ window.onload = function () {
                     }
                 }
                 c.strokeStyle = color;
-                c.lineWidth = 0.05;
+                c.lineWidth = isFirefox()?0.5:0.05;
                 c.stroke();
                 c.globalCompositeOperation = "source-over";
             }

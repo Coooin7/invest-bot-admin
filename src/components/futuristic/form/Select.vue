@@ -11,9 +11,21 @@ const props = defineProps({
     name: String,
     data: Array<SelectDataItem>,
 })
-const emit = defineEmits(['update:modelValue']);
+const emit = defineEmits(['update:modelValue', 'change']);
 const choose_item = (val: SelectDataItem) => {
     emit('update:modelValue', val.value);
+    emit('change', val.value);
+}
+const get_title = () => {
+    if (!props.data) {
+        return 'ALL';
+    }
+    for (const opt of props.data) {
+        if (opt.value === props.modelValue) {
+            return opt.title;
+        }
+    }
+    return 'ALL';
 }
 </script>
 <template>
@@ -21,15 +33,16 @@ const choose_item = (val: SelectDataItem) => {
         <label v-if="name" class="text-muted select-none">{{ name }}</label>
         <div class="select relative">
             <div class="value form-control text-ellipsis overflow-hidden">
-                <div>
-                    {{ props.modelValue ? props.modelValue : 'ALL' }}
+                <div class="pr-2">
+                    {{ get_title() }}
                 </div>
                 <svg xmlns="http://www.w3.org/2000/svg" class="icon w-4 h-4" width="14" height="14">
                     <path stroke-width="2" stroke="#fff" d="M 0,12 L 8,4 L 16,12" />
                 </svg>
             </div>
-            <div class="option min-w-[100%] absolute left-0 top-[100%] z-50">
-                <div class="option-item" v-for="(o, i) in props.data" :key="i" @click="choose_item(o)">
+            <div class="option min-w-[100%] absolute left-0 top-[100%] z-50 max-h-40 overflow-y-auto"
+                :class="theme.themeScrollClassName">
+                <div class="option-item p-2" v-for="(o, i) in props.data" :key="i" @click="choose_item(o)">
                     {{ o.title }}
                 </div>
             </div>
@@ -48,8 +61,7 @@ const choose_item = (val: SelectDataItem) => {
 }
 
 .option {
-    padding: 1em;
-    background: rgba(0, 0, 0, 0.849);
+    background: rgba(35, 58, 87, 1);
     user-select: none;
     color: #ffffff;
     z-index: 1001;
@@ -70,27 +82,17 @@ const choose_item = (val: SelectDataItem) => {
 
 .select:hover .option {
     transform: scaleY(1);
+    font-size: 1rem;
 }
 
 .form-control {
     padding: 8px;
-    font-size: 1.2rem;
-    font-family: "VT323", monospace;
+    font-size: 1rem;
     outline: none;
-    background: rgba(0, 0, 0, 0.589);
-    color: #00e7ff;
+    background: rgba(35, 58, 87, 0.71);
+    color: #fff;
     line-height: normal;
-}
-
-.form-control option {
-    color: #ffffff;
-    background: rgba(0, 0, 0, 0.589);
-    appearance: none;
-}
-
-.form-control option:hover {
-    background: rgba(255, 71, 71, 0.589);
-    font-weight: bold;
+    border-radius: 0.5rem;
 }
 
 /**color0 */
@@ -142,17 +144,19 @@ const choose_item = (val: SelectDataItem) => {
 
 /**color3 */
 .type3 .text-muted {
-    color: #39e0ff;
+    color: #fff;
 }
 
 .type3 .form-control {
-    border: #39e0ff 1px solid;
+    border: transparent 1px solid;
 }
 
 .type3 .option {
-    border: #39e0ff 1px solid;
+    border: transparent 1px solid;
+    color: #70aad1;
 }
 
 .type3 .option-item:hover {
-    color: #39e0ff;
+    font-weight: bold;
+    background: linear-gradient(90deg, #1e587f 0%, transparent 100%);
 }</style>

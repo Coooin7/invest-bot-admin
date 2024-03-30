@@ -3,27 +3,20 @@
 
 <head>
   <meta charset="UTF-8">
-  <link rel="icon" href="/static/logo.png">
+  <link rel="shortcut icon" href="/static/favicon.png" type="image/x-icon">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Coooin</title>
 </head>
 
 <body>
-  <canvas id="canvas-bg"></canvas>
+  <canvas id="canvas-bg" width="0" height="0"></canvas>
   <div id="app"></div>
-  <script src="animation-bg.js"></script>
-  <script type="module" src="/src/main.ts"></script>
-  <script>
-    window.addEventListener('contextmenu', (e) => {
-      e.preventDefault();
-    })
-    window.addEventListener('keydown', (e) => {
-      if (e.code && e.code.toLocaleLowerCase() === 'f12') {
-        e.preventDefault();
-      }
-
-    })
+  <!-- <script src="/animation-bg.js"></script> -->
+  <script type="module">
+    import { Buffer } from "buffer";
+    window.Buffer = Buffer;
   </script>
+  <script type="module" src="/src/main.ts"></script>
 </body>
 
 </html>

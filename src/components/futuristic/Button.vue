@@ -1,22 +1,22 @@
 <script setup lang="ts">
-import { useThemeStore,type ThemeType } from '@/stores/theme';
+import { useThemeStore, type ThemeType } from '@/stores/theme';
 import { AudioManager } from '@/utils/audio';
 
 const theme = useThemeStore();
 type btnPropo = {
-    loading?:boolean,
-    content?:string,
+    loading?: boolean,
+    content?: string,
     type?: ThemeType
 }
 
 const prop = defineProps<btnPropo>();
 const emit = defineEmits(['click']);
-const onClick = ()=>{
-    AudioManager.playSound('static/audio/click.mp3');
+const onClick = () => {
+    AudioManager.playSound('/static/audio/click.mp3');
     emit('click');
 }
 const themeClass = theme.createThemeClassName(prop.type);
-
+const slots = defineSlots();
 </script>
 <template>
     <div class="btn-warp" :class="themeClass">
@@ -29,6 +29,7 @@ const themeClass = theme.createThemeClassName(prop.type);
         <div class="btn-border-point btn-border-point-3"></div>
         <div class="btn-border-point btn-border-point-4"></div>
         <button class="button" :disabled="prop.loading" @click="onClick">
+            <slot name="icon"  v-if="!prop.loading"/>
             <svg v-if="prop.loading" viewBox="0 0 24 24" class="w-4 h-4">
                 <g class="btn-icon-animate">
                     <path
@@ -37,8 +38,8 @@ const themeClass = theme.createThemeClassName(prop.type);
                     <rect width="24" height="24" fill="transparent"></rect>
                 </g>
             </svg>
-            <span v-if="prop.content">{{prop.content}}</span>
-            <slot/>
+            <span v-if="prop.content">{{ prop.content }}</span>
+            <slot />
         </button>
     </div>
 </template>
@@ -50,9 +51,10 @@ const themeClass = theme.createThemeClassName(prop.type);
     vertical-align: middle;
     padding: 1px;
     box-sizing: border-box;
-    
-    --animate-time:400ms;
+    font-size: 1rem;
+    --animate-time: 400ms;
 }
+
 .btn-border-line {
     z-index: 1;
     opacity: 1;
@@ -108,37 +110,44 @@ const themeClass = theme.createThemeClassName(prop.type);
     left: -1px;
     top: -1px;
     border-width: 1px 0 0 1px;
+    border-top-left-radius: 0.5rem;
 }
 
 .btn-border-point-2 {
     left: -1px;
     bottom: -1px;
     border-width: 0 0 1px 1px;
+    border-bottom-left-radius: 0.5rem;
 }
 
 .btn-border-point-3 {
     right: -1px;
     top: -1px;
     border-width: 1px 1px 0 0;
+    border-top-right-radius: 0.5rem;
 }
 
 .btn-border-point-4 {
     right: -1px;
     bottom: -1px;
     border-width: 0 1px 1px 0;
+    border-bottom-right-radius: 0.5rem;
 }
 
 .button {
     padding: 10px 20px;
-    
+
 }
+
 .button svg {
     display: inline-block;
     margin-right: 0.3em;
 }
-.button[disabled]{
+
+.button[disabled] {
     filter: grayscale(1);
 }
+
 .button:focus {
     outline: none;
 }
@@ -172,11 +181,13 @@ const themeClass = theme.createThemeClassName(prop.type);
         transform: rotate(360deg)
     }
 }
+
 @keyframes border-height {
-    0%{
+    0% {
         height: 0%;
     }
-    100%{
+
+    100% {
         height: 100%;
     }
 }
@@ -185,75 +196,95 @@ const themeClass = theme.createThemeClassName(prop.type);
     animation: 2s linear 0s infinite normal none running icon-spin;
     transform-origin: center center;
 }
+
 /* color0 */
 .type0>.button {
     color: #ea00ff;
 }
+
 .type0>.btn-border-point {
     border-color: #ff00bf;
 }
+
 .type0>.btn-border-line {
     border-color: rgb(105, 1, 79);
     box-shadow: 0 0 4px rgba(104, 1, 87, 0.65);
 }
+
 .type0:hover>.btn-border-line {
     border-color: #ea00ff;
 }
-.type0:hover{
+
+.type0:hover {
     background-color: rgba(243, 5, 211, 0.116);
 }
+
 /* color1 */
 .type1>.button {
     color: #00ff00;
 }
+
 .type1>.btn-border-point {
     border-color: #00ff00;
 }
+
 .type1>.btn-border-line {
     border-color: rgb(1, 129, 1);
     box-shadow: 0 0 4px rgba(1, 95, 1, 0.65);
 }
+
 .type1:hover>.btn-border-line {
     border-color: #00ff00;
 }
-.type1:hover{
+
+.type1:hover {
     background-color: rgba(5, 243, 65, 0.226);
 }
+
 /* color2 */
 .type2>.button {
     color: #ff0022;
 }
+
 .type2>.btn-border-point {
     border-color: #ff0040;
 }
+
 .type2>.btn-border-line {
     border-color: rgb(110, 1, 29);
     box-shadow: 0 0 4px rgba(99, 1, 17, 0.65);
 }
+
 .type2:hover>.btn-border-line {
     border-color: #ff002b;
 }
-.type2:hover{
+
+.type2:hover {
     background-color: rgba(243, 5, 5, 0.151);
 }
+
 /* color3 */
-.type3{
+.type3 {
     background-color: rgba(5, 136, 243, 0.1);
 }
+
 .type3>.button {
     color: #39e0ff;
 }
+
 .type3>.btn-border-point {
     border-color: #39e0ff;
 }
+
 .type3>.btn-border-line {
     border-color: rgb(1, 99, 129);
     box-shadow: 0 0 4px rgba(1, 71, 99, 0.65);
 }
+
 .type3:hover>.btn-border-line {
     border-color: #39e0ff;
 }
-.type3:hover{
+
+.type3:hover {
     background-color: rgba(5, 136, 243, 0.151);
-}
-</style>
+}</style>
